@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace _3
 {
-    interface ILogger
+    public enum LogLevel
     {
+        Debug,
+        Info,
+        Warning,
+        Error
+    }
+
+    public interface ILogger
+    {
+        void Log(LogLevel level, string message);
     }
 }
