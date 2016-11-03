@@ -16,11 +16,11 @@ namespace LoggerTest
         {
             int n = Thread.CurrentThread.ManagedThreadId;
             logger.Log(LogLevel.Info, "Task "  +n.ToString() + " started");
-            Thread.Sleep(30);
-            for(int i = 0; i< 100; i++)
+           // Thread.Sleep(1000);
+            for(int i = 0; i< 10; i++)
             {
                 logger.Log(LogLevel.Info, "Task " + n.ToString() + " working " + i.ToString());
-                Thread.Sleep(300);
+                //Thread.Sleep(100);
             }
             logger.Log(LogLevel.Info, "Task " +n.ToString() + " finish");
         }
@@ -28,11 +28,13 @@ namespace LoggerTest
         [TestMethod]
         public void TestMethod1()
         {
-            MemoryStream ms1 = new MemoryStream();
-            MemoryStream ms2 = new MemoryStream();
-            MemoryStream[] ilt = new MemoryStream[2];
-            ilt[0] = ms1;
-            ilt[1] = ms2;
+            FileStream fs1 = new FileStream("log1.b", FileMode.Create);
+            LoggerTarget lt1 = new LoggerTarget(fs1);
+            FileStream fs2 = new FileStream("log2.b", FileMode.Create);
+            LoggerTarget lt2 = new LoggerTarget(fs2);
+            ILoggerTarget[] ilt = new ILoggerTarget[2];
+            ilt[0] = lt1;
+            ilt[1] = lt2;
 
             logger = new Logger(10, ilt);
 

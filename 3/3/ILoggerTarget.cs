@@ -9,8 +9,7 @@ namespace _3
 {
     public interface ILoggerTarget
     {
-         Stream targetStream { get; set; }
-        bool Flush();
-        Task<bool> FlushAsync();
+        bool Flush(List<string> buffer);
+        Task<bool> FlushAsync(List<string> buffer);
     }
 }

@@ -9,31 +9,42 @@ namespace _3
 {
     public class LoggerTarget : ILoggerTarget
     {
-        private Stream targetStream;
+        private FileStream fileStream;
 
-        public LoggerTarget(Stream targetStream)
+        public static byte[] GetBytes(List<string> buffer)
         {
-            this.targetStream = targetStream;
-        }   
-
-        Stream ILoggerTarget.targetStream
-        {
-            get
+            string str = "";
+            for(int i = 0; i<buffer.Count; i++)
             {
-                return targetStream;
+                str += buffer.ElementAt(i)+'\n';
             }
-            set { targetStream = value; }
+
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
         }
 
-       
-        public bool Flush()
+        public LoggerTarget(FileStream fileStream)
         {
-            throw new NotImplementedException();
+            this.fileStream = fileStream;
         }
 
-        public Task<bool> FlushAsync()
+        public bool Flush(List<string> buffer)
         {
-            throw new NotImplementedException();
+            byte[] b_array = GetBytes(buffer);            
+            fileStream.Write(b_array, 0, b_array.Length);
+            fileStream.Flush();
+            return true;
+        }
+
+        
+
+        public async Task<bool> FlushAsync(List<string> buffer)
+        {
+            byte[] b_array = GetBytes(buffer);
+            fileStream.Write(b_array, 0, b_array.Length);
+            await fileStream.FlushAsync();
+            return true;
         }
     }
 }
